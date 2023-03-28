@@ -1,3 +1,4 @@
 rootProject.name = 'rabbit-example'
 
 include 'simple-rabbit'
+include 'simple-rabbit-clone'
