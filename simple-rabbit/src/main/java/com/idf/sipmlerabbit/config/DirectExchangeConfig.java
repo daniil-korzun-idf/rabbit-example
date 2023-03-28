@@ -13,6 +13,8 @@ public class DirectExchangeConfig {
   public static final String DIRECT_EXCHANGE = "exchange.direct.credit";
   public static final String BASE_CREDIT_ROUTING_KEY = "base.credit";
   public static final String PLUS_CREDIT_ROUTING_KEY = "plus.credit";
+  public static final String PREMIUM_CREDIT_ROUTING_KEY = "premium.credit";
+  public static final String SUPER_CREDIT_ROUTING_KEY = "super.credit";
 
   @Bean
   public DirectExchange directExchange() {
