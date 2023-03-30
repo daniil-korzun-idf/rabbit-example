@@ -2,6 +2,13 @@ package com.idf.simplerabbitclone;
 
 import static org.springframework.amqp.core.MessageDeliveryMode.NON_PERSISTENT;
 
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.Consumer;
+import com.rabbitmq.client.DefaultConsumer;
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Binding;
@@ -52,20 +59,27 @@ public class SimpleRabbitCloneApplication {
 
   @RabbitListener(queues = QUEUE_NAME)
   public void listener(String num) throws InterruptedException {
-    /*Thread.sleep(10000);
-    System.exit(0);*/
-    log.info("Got message number: " + num);
+    Thread.sleep(100000);
+    System.exit(0);
   }
 
-  @Scheduled(fixedDelay = 1000L)
+  @Scheduled(fixedDelay = 100L)
   public void trashProducer() {
     MessageProperties messageProperties = new MessageProperties();
     messageProperties.setDeliveryMode(NON_PERSISTENT);
     rabbitTemplate.convertAndSend(
         EXCHANGE_NAME,
         ROUTING_KEY,
-        new SimpleMessageConverter().toMessage(String.valueOf(++NUMBER_COUNTER), messageProperties)
-        //String.valueOf(++NUMBER_COUNTER)
+        String.valueOf(++NUMBER_COUNTER)
     );
+  }
+
+  private void consume() throws IOException, TimeoutException {
+    ConnectionFactory factory = new ConnectionFactory();
+    factory.setHost("localhost");
+    Connection connection = factory.newConnection();
+    Channel channel = connection.createChannel();
+    Consumer consumer = new DefaultConsumer(channel);
+    channel.basicConsume(QUEUE_NAME, true, consumer);
   }
 }
